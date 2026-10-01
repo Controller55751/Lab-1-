@@ -1,3 +1,8 @@
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+
 int main() {
     // Seed the random number generator so recommendations change on every run
     std::srand(std::time(0));
