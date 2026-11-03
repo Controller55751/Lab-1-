@@ -23,6 +23,7 @@ public:
 
 #endif // NUMBERARRAY_H
 
+
 #include "NumberArray.h"
 #include <iostream>
 #include <stdexcept>
@@ -102,6 +103,7 @@ float NumberArray::getAverage() const {
     }
     return sum / size;
 }
+
 
 #include <iostream>
 #include <iomanip>
