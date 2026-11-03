@@ -102,3 +102,48 @@ float NumberArray::getAverage() const {
     }
     return sum / size;
 }
+
+#include <iostream>
+#include <iomanip>
+#include <cstdlib>
+#include <ctime>
+#include "NumberArray.h"
+
+int main() {
+    // Seed the random number generator
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+    // 1. Create a NumberArray object using the default constructor
+    NumberArray defaultArr;
+    std::cout << "Default NumberArray object created.\n";
+    std::cout << "Size of default array: " << defaultArr.getSize() << "\n\n";
+
+    // 2. Create a second NumberArray object that holds 15 numbers
+    const int SECOND_SIZE = 15;
+    NumberArray customArr(SECOND_SIZE);
+    std::cout << "Second NumberArray object created with size " << customArr.getSize() << ".\n";
+
+    // 3. Store 15 randomly generated numbers (range: 1.0 to 100.0)
+    for (int i = 0; i < SECOND_SIZE; ++i) {
+        float randomVal = 1.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 99.0f));
+        customArr.storeNumber(i, randomVal);
+    }
+
+    // 4. Print the stored numbers
+    std::cout << "\nStored 15 random numbers in the second array:\n";
+    std::cout << std::fixed << std::setprecision(2);
+    for (int i = 0; i < customArr.getSize(); ++i) {
+        float val;
+        if (customArr.getNumber(i, val)) {
+            std::cout << "Element [" << std::setw(2) << i << "]: " << std::setw(6) << val << "\n";
+        }
+    }
+
+    // 5. Print statistics
+    std::cout << "\n--- Array Statistics ---\n";
+    std::cout << "Maximum Value : " << customArr.getHighest() << "\n";
+    std::cout << "Minimum Value : " << customArr.getLowest()  << "\n";
+    std::cout << "Average Value : " << customArr.getAverage() << "\n";
+
+    return 0;
+}
