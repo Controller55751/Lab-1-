@@ -1,151 +1,187 @@
-#ifndef NUMBERARRAY_H
-#define NUMBERARRAY_H
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
 
-class NumberArray {
+using namespace std;
+
+class NumberArray
+{
 private:
-    float* array;
+    float* numbers;
     int size;
 
 public:
-    // Constructors and Destructor
-    NumberArray();                        // Default constructor (delegates to parameterized)
-    explicit NumberArray(int arraySize);  // Parameterized constructor
-    ~NumberArray();                       // Destructor
+    // Constructors
+    NumberArray();
+    NumberArray(int);
+
+    // Destructor
+    ~NumberArray();
 
     // Member functions
     int getSize() const;
-    bool storeNumber(int index, float value);
-    bool getNumber(int index, float& value) const;
+    void setNumber(int, float);
+    float getNumber(int) const;
+
     float getHighest() const;
     float getLowest() const;
     float getAverage() const;
 };
 
-#endif // NUMBERARRAY_H
+// Default constructor using constructor delegation
+NumberArray::NumberArray() : NumberArray(10)
+{
+}
 
-
-#include "NumberArray.h"
-#include <iostream>
-#include <stdexcept>
-#include <algorithm>
-
-// Parameterized Constructor: performs dynamic memory allocation and bounds checking
-NumberArray::NumberArray(int arraySize) {
-    if (arraySize <= 0) {
-        std::cerr << "Error: Array size must be greater than zero. Defaulting to size 10.\n";
+// Constructor that accepts the array size
+NumberArray::NumberArray(int s)
+{
+    if (s <= 0)
+    {
+        cout << "Invalid array size. Setting size to 10." << endl;
         size = 10;
-    } else {
-        size = arraySize;
     }
-    array = new float[size](); // Zero-initializes all elements
+    else
+    {
+        size = s;
+    }
+
+    numbers = new float[size];
+
+    // Initialize all elements to 0
+    for (int i = 0; i < size; i++)
+    {
+        numbers[i] = 0.0;
+    }
 }
 
-// Default Constructor: uses constructor delegation to call the parameterized constructor with size 10
-NumberArray::NumberArray() : NumberArray(10) {}
-
-// Destructor: frees allocated dynamic memory
-NumberArray::~NumberArray() {
-    delete[] array;
+// Destructor
+NumberArray::~NumberArray()
+{
+    delete[] numbers;
 }
 
-// Returns the number of elements in the array
-int NumberArray::getSize() const {
+// Return the number of elements
+int NumberArray::getSize() const
+{
     return size;
 }
 
-// Stores a number at a given index with bounds checking
-bool NumberArray::storeNumber(int index, float value) {
-    if (index < 0 || index >= size) {
-        std::cerr << "Error: Index " << index << " out of bounds.\n";
-        return false;
+// Store a number in the array
+void NumberArray::setNumber(int index, float value)
+{
+    if (index >= 0 && index < size)
+    {
+        numbers[index] = value;
     }
-    array[index] = value;
-    return true;
+    else
+    {
+        cout << "Error: Invalid array index." << endl;
+    }
 }
 
-// Retrieves a number from a given index with bounds checking
-bool NumberArray::getNumber(int index, float& value) const {
-    if (index < 0 || index >= size) {
-        std::cerr << "Error: Index " << index << " out of bounds.\n";
-        return false;
+// Retrieve a number from the array
+float NumberArray::getNumber(int index) const
+{
+    if (index >= 0 && index < size)
+    {
+        return numbers[index];
     }
-    value = array[index];
-    return true;
+    else
+    {
+        cout << "Error: Invalid array index." << endl;
+        return 0.0;
+    }
 }
 
-// Returns the highest value in the array
-float NumberArray::getHighest() const {
-    float highest = array[0];
-    for (int i = 1; i < size; ++i) {
-        if (array[i] > highest) {
-            highest = array[i];
+// Return the highest value
+float NumberArray::getHighest() const
+{
+    float highest = numbers[0];
+
+    for (int i = 1; i < size; i++)
+    {
+        if (numbers[i] > highest)
+        {
+            highest = numbers[i];
         }
     }
+
     return highest;
 }
 
-// Returns the lowest value in the array
-float NumberArray::getLowest() const {
-    float lowest = array[0];
-    for (int i = 1; i < size; ++i) {
-        if (array[i] < lowest) {
-            lowest = array[i];
+// Return the lowest value
+float NumberArray::getLowest() const
+{
+    float lowest = numbers[0];
+
+    for (int i = 1; i < size; i++)
+    {
+        if (numbers[i] < lowest)
+        {
+            lowest = numbers[i];
         }
     }
+
     return lowest;
 }
 
-// Returns the average of all numbers in the array
-float NumberArray::getAverage() const {
-    float sum = 0.0f;
-    for (int i = 0; i < size; ++i) {
-        sum += array[i];
+// Return the average value
+float NumberArray::getAverage() const
+{
+    float total = 0.0;
+
+    for (int i = 0; i < size; i++)
+    {
+        total += numbers[i];
     }
-    return sum / size;
+
+    return total / size;
 }
 
+int main()
+{
+    // Create an object using the default constructor
+    NumberArray array1;
 
-#include <iostream>
-#include <iomanip>
-#include <cstdlib>
-#include <ctime>
-#include "NumberArray.h"
+    cout << "The size of the first array is: "
+         << array1.getSize() << endl;
 
-int main() {
+    cout << endl;
+
+    // Create an object that holds 15 numbers
+    NumberArray array2(15);
+
     // Seed the random number generator
-    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+    srand(static_cast<unsigned int>(time(0)));
 
-    // 1. Create a NumberArray object using the default constructor
-    NumberArray defaultArr;
-    std::cout << "Default NumberArray object created.\n";
-    std::cout << "Size of default array: " << defaultArr.getSize() << "\n\n";
+    // Store 15 randomly generated numbers
+    for (int i = 0; i < array2.getSize(); i++)
+    {
+        float randomNumber = rand() % 100 + 1;
 
-    // 2. Create a second NumberArray object that holds 15 numbers
-    const int SECOND_SIZE = 15;
-    NumberArray customArr(SECOND_SIZE);
-    std::cout << "Second NumberArray object created with size " << customArr.getSize() << ".\n";
-
-    // 3. Store 15 randomly generated numbers (range: 1.0 to 100.0)
-    for (int i = 0; i < SECOND_SIZE; ++i) {
-        float randomVal = 1.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 99.0f));
-        customArr.storeNumber(i, randomVal);
+        array2.setNumber(i, randomNumber);
     }
 
-    // 4. Print the stored numbers
-    std::cout << "\nStored 15 random numbers in the second array:\n";
-    std::cout << std::fixed << std::setprecision(2);
-    for (int i = 0; i < customArr.getSize(); ++i) {
-        float val;
-        if (customArr.getNumber(i, val)) {
-            std::cout << "Element [" << std::setw(2) << i << "]: " << std::setw(6) << val << "\n";
-        }
+    // Display the numbers
+    cout << "The 15 numbers stored in the array are:" << endl;
+
+    for (int i = 0; i < array2.getSize(); i++)
+    {
+        cout << array2.getNumber(i) << " ";
     }
 
-    // 5. Print statistics
-    std::cout << "\n--- Array Statistics ---\n";
-    std::cout << "Maximum Value : " << customArr.getHighest() << "\n";
-    std::cout << "Minimum Value : " << customArr.getLowest()  << "\n";
-    std::cout << "Average Value : " << customArr.getAverage() << "\n";
+    cout << endl << endl;
+
+    // Display maximum, minimum, and average
+    cout << "Highest value: "
+         << array2.getHighest() << endl;
+
+    cout << "Lowest value: "
+         << array2.getLowest() << endl;
+
+    cout << "Average value: "
+         << array2.getAverage() << endl;
 
     return 0;
 }
